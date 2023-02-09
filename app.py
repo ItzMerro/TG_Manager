@@ -3,10 +3,12 @@ import requests
 import json
 import sqlite3
 from sqlite3 import Error
+from dotenv import load_dotenv
+import os
 
-TOKEN="5626006846:AAFdweDNkQjpsQjQuwlT6_YgHQAyQttKZAs"
-# response=requests.get('https://api.telegram.org/bot5626006846:AAFdweDNkQjpsQjQuwlT6_YgHQAyQttKZAs/getme')
-# url='https://api.telegram.org/bot%s/getUpdates' % TOKEN
+load_dotenv()
+TOKEN = os.environ.get("token")
+url='https://api.telegram.org/bot%s/getUpdates' % TOKEN
 app = Flask(__name__)
 
 def create_connection(db_file):
@@ -121,7 +123,7 @@ def main():
             print("Error! cannot create the database connection.")    
 
     with conn:
-        response=requests.get('https://api.telegram.org/bot5626006846:AAFdweDNkQjpsQjQuwlT6_YgHQAyQttKZAs/getupdates')
+        response=requests.get(url)
         info = json.loads(response.text)
         user = []
         chat=[]
@@ -161,7 +163,9 @@ def main():
 
 @app.route('/')
 def home():
-    response=requests.get('https://api.telegram.org/bot5626006846:AAFdweDNkQjpsQjQuwlT6_YgHQAyQttKZAs/getupdates')
+
+    # this should be fetched from the db now
+    response=requests.get(url)
     info = json.loads(response.text)
     new_chat_member = []
     messages=[]
